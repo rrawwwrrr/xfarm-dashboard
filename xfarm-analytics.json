@@ -1,0 +1,672 @@
+{
+  "panels": [
+    {
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          }
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "colorMode": "none",
+        "graphMode": "area",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "datasource": "VictoriaMetrics",
+          "expr": "sum(test_run_total{platform=~\"$platform\", project=~\"$project\", status=~\"$status\"})",
+          "legendFormat": "Всего"
+        }
+      ],
+      "title": "Всего запусков тестов",
+      "type": "stat"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 6,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "colorMode": "none",
+        "graphMode": "area",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "datasource": "VictoriaMetrics",
+          "expr": "sum(test_run_total{platform=\"ANDROID\", project=~\"$project\", status=~\"$status\"})",
+          "legendFormat": "Android"
+        }
+      ],
+      "title": "Запуски Android",
+      "type": "stat"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "steps": [
+              {
+                "color": "purple",
+                "value": null
+              }
+            ]
+          }
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 12,
+        "y": 0
+      },
+      "id": 3,
+      "options": {
+        "colorMode": "none",
+        "graphMode": "area",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "datasource": "VictoriaMetrics",
+          "expr": "sum(test_run_total{platform=\"IOS\", project=~\"$project\", status=~\"$status\"})",
+          "legendFormat": "iOS"
+        }
+      ],
+      "title": "Запуски iOS",
+      "type": "stat"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "min": 0,
+          "thresholds": {
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 18,
+        "y": 0
+      },
+      "id": 9,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "datasource": "VictoriaMetrics",
+          "expr": "sum by (platform) (runs_active)",
+          "legendFormat": "{{platform}}"
+        }
+      ],
+      "title": "Активных run сейчас",
+      "type": "stat"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "fillOpacity": 10,
+            "lineWidth": 2
+          },
+          "unit": "short"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 4
+      },
+      "id": 5,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      },
+      "targets": [
+        {
+          "datasource": "VictoriaMetrics",
+          "expr": "sum by (platform) (rate(test_run_total{platform=~\"$platform\", project=~\"$project\", status=~\"$status\"}[5m])) * 60",
+          "legendFormat": "{{platform}}"
+        }
+      ],
+      "title": "Частота запусков по платформе (в минуту)",
+      "type": "timeseries"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "lineWidth": 2
+          },
+          "unit": "s"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 4
+      },
+      "id": 6,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      },
+      "targets": [
+        {
+          "datasource": "VictoriaMetrics",
+          "expr": "histogram_quantile(0.50, sum by (le, platform) (rate(test_run_duration_seconds_bucket{platform=~\"$platform\", project=~\"$project\", status=~\"$status\"}[5m])))",
+          "legendFormat": "p50 {{platform}}"
+        },
+        {
+          "datasource": "VictoriaMetrics",
+          "expr": "histogram_quantile(0.95, sum by (le, platform) (rate(test_run_duration_seconds_bucket{platform=~\"$platform\", project=~\"$project\", status=~\"$status\"}[5m])))",
+          "legendFormat": "p95 {{platform}}"
+        },
+        {
+          "datasource": "VictoriaMetrics",
+          "expr": "histogram_quantile(0.99, sum by (le, platform) (rate(test_run_duration_seconds_bucket{platform=~\"$platform\", project=~\"$project\", status=~\"$status\"}[5m])))",
+          "legendFormat": "p99 {{platform}}"
+        }
+      ],
+      "title": "Перцентили длительности тестов по платформе",
+      "type": "timeseries"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "lineWidth": 2
+          },
+          "unit": "s"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 12
+      },
+      "id": 7,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      },
+      "targets": [
+        {
+          "datasource": "VictoriaMetrics",
+          "expr": "histogram_quantile(0.50, sum by (le) (rate(reservation_duration_seconds_bucket[5m])))",
+          "legendFormat": "p50"
+        },
+        {
+          "datasource": "VictoriaMetrics",
+          "expr": "histogram_quantile(0.95, sum by (le) (rate(reservation_duration_seconds_bucket[5m])))",
+          "legendFormat": "p95"
+        },
+        {
+          "datasource": "VictoriaMetrics",
+          "expr": "histogram_quantile(0.99, sum by (le) (rate(reservation_duration_seconds_bucket[5m])))",
+          "legendFormat": "p99"
+        }
+      ],
+      "title": "Перцентили длительности резервирования",
+      "type": "timeseries"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "min": 0
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 12
+      },
+      "id": 8,
+      "options": {
+        "displayMode": "gradient",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "datasource": "VictoriaMetrics",
+          "expr": "sum by (platform) (test_run_total{platform=~\"$platform\", project=~\"$project\", status=~\"$status\"})",
+          "legendFormat": "{{platform}}"
+        }
+      ],
+      "title": "Всего запусков по платформе",
+      "type": "bargauge"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "min": 0
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 20
+      },
+      "id": 11,
+      "options": {
+        "displayMode": "gradient",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "datasource": "VictoriaMetrics",
+          "expr": "sum by (project) (test_run_total{platform=~\"$platform\", project=~\"$project\", status=~\"$status\"})",
+          "legendFormat": "{{project}}"
+        }
+      ],
+      "title": "Всего запусков по проекту",
+      "type": "bargauge"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "fillOpacity": 10,
+            "lineWidth": 2
+          },
+          "unit": "short"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 20
+      },
+      "id": 12,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      },
+      "targets": [
+        {
+          "datasource": "VictoriaMetrics",
+          "expr": "sum by (project) (rate(test_run_total{platform=~\"$platform\", project=~\"$project\", status=~\"$status\"}[5m])) * 60",
+          "legendFormat": "{{project}}"
+        }
+      ],
+      "title": "Частота запусков по проекту (в минуту)",
+      "type": "timeseries"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "lineWidth": 2
+          },
+          "unit": "s"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 28
+      },
+      "id": 13,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      },
+      "targets": [
+        {
+          "datasource": "VictoriaMetrics",
+          "expr": "histogram_quantile(0.50, sum by (le, project) (rate(test_run_duration_seconds_bucket{platform=~\"$platform\", project=~\"$project\", status=~\"$status\"}[5m])))",
+          "legendFormat": "p50 {{project}}"
+        },
+        {
+          "datasource": "VictoriaMetrics",
+          "expr": "histogram_quantile(0.95, sum by (le, project) (rate(test_run_duration_seconds_bucket{platform=~\"$platform\", project=~\"$project\", status=~\"$status\"}[5m])))",
+          "legendFormat": "p95 {{project}}"
+        },
+        {
+          "datasource": "VictoriaMetrics",
+          "expr": "histogram_quantile(0.99, sum by (le, project) (rate(test_run_duration_seconds_bucket{platform=~\"$platform\", project=~\"$project\", status=~\"$status\"}[5m])))",
+          "legendFormat": "p99 {{project}}"
+        }
+      ],
+      "title": "Перцентили длительности по проекту",
+      "type": "timeseries"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "min": 0
+        },
+        "overrides": [
+          {
+            "matcher": { "id": "byName", "options": "COMPLETED" },
+            "properties": [{ "id": "color", "value": { "fixedColor": "green", "mode": "fixed" } }]
+          },
+          {
+            "matcher": { "id": "byName", "options": "FAILED" },
+            "properties": [{ "id": "color", "value": { "fixedColor": "red", "mode": "fixed" } }]
+          },
+          {
+            "matcher": { "id": "byName", "options": "CANCELLED" },
+            "properties": [{ "id": "color", "value": { "fixedColor": "orange", "mode": "fixed" } }]
+          },
+          {
+            "matcher": { "id": "byName", "options": "TIMEOUT" },
+            "properties": [{ "id": "color", "value": { "fixedColor": "yellow", "mode": "fixed" } }]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 36
+      },
+      "id": 14,
+      "options": {
+        "displayMode": "gradient",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"]
+        }
+      },
+      "targets": [
+        {
+          "datasource": "VictoriaMetrics",
+          "expr": "sum by (status) (test_run_total{platform=~\"$platform\", project=~\"$project\"})",
+          "legendFormat": "{{status}}"
+        }
+      ],
+      "title": "Всего запусков по статусу",
+      "type": "bargauge"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "fillOpacity": 10,
+            "lineWidth": 2
+          },
+          "unit": "short"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 36
+      },
+      "id": 15,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      },
+      "targets": [
+        {
+          "datasource": "VictoriaMetrics",
+          "expr": "sum by (status) (rate(test_run_total{platform=~\"$platform\", project=~\"$project\"}[5m])) * 60",
+          "legendFormat": "{{status}}"
+        }
+      ],
+      "title": "Частота запусков по статусу (в минуту)",
+      "type": "timeseries"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "fillOpacity": 15,
+            "lineWidth": 2
+          },
+          "min": 0,
+          "unit": "short"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 44
+      },
+      "id": 10,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      },
+      "targets": [
+        {
+          "datasource": "VictoriaMetrics",
+          "expr": "sum by (platform) (runs_active)",
+          "legendFormat": "{{platform}}"
+        }
+      ],
+      "title": "Активные run по платформе",
+      "type": "timeseries"
+    }
+  ],
+  "refresh": "30s",
+  "schemaVersion": 38,
+  "tags": [
+    "xfarm"
+  ],
+  "templating": {
+    "list": [
+      {
+        "allValue": ".*",
+        "current": {
+          "text": "All",
+          "value": "$__all"
+        },
+        "includeAll": true,
+        "label": "Платформа",
+        "multi": false,
+        "name": "platform",
+        "options": [
+          {
+            "selected": true,
+            "text": "All",
+            "value": "$__all"
+          },
+          {
+            "text": "ANDROID",
+            "value": "ANDROID"
+          },
+          {
+            "text": "IOS",
+            "value": "IOS"
+          }
+        ],
+        "type": "custom"
+      },
+      {
+        "allValue": ".*",
+        "current": {
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": "VictoriaMetrics",
+        "definition": "label_values(test_run_total, project)",
+        "includeAll": true,
+        "label": "Проект",
+        "multi": false,
+        "name": "project",
+        "query": "label_values(test_run_total, project)",
+        "refresh": 2,
+        "sort": 1,
+        "type": "query"
+      },
+      {
+        "allValue": ".*",
+        "current": {
+          "text": "All",
+          "value": "$__all"
+        },
+        "includeAll": true,
+        "label": "Статус",
+        "multi": true,
+        "name": "status",
+        "options": [
+          {
+            "selected": true,
+            "text": "All",
+            "value": "$__all"
+          },
+          {
+            "text": "COMPLETED",
+            "value": "COMPLETED"
+          },
+          {
+            "text": "FAILED",
+            "value": "FAILED"
+          },
+          {
+            "text": "CANCELLED",
+            "value": "CANCELLED"
+          },
+          {
+            "text": "TIMEOUT",
+            "value": "TIMEOUT"
+          }
+        ],
+        "type": "custom"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-24h",
+    "to": "now"
+  },
+  "timezone": "browser",
+  "title": "xFarm Analytics",
+  "uid": "xfarm-analytics"
+}
