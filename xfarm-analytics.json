@@ -318,9 +318,9 @@
         "displayMode": "gradient",
         "orientation": "horizontal",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ]
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
         }
       },
       "targets": [
@@ -353,9 +353,9 @@
         "displayMode": "gradient",
         "orientation": "horizontal",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ]
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
         }
       },
       "targets": [
@@ -487,7 +487,9 @@
         "displayMode": "gradient",
         "orientation": "horizontal",
         "reduceOptions": {
-          "calcs": ["lastNotNull"]
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
         }
       },
       "targets": [
